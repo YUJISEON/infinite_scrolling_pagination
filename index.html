@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+</head>
+<style>
+    p { padding: 10px 0;}
+
+    .face-load{
+        display:flex;
+        width:50px;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        margin-left: -25px;
+        opacity: 0;
+    }
+
+    .face-load.show {
+        opacity: 1;
+    }
+
+    .face-load div{
+        width:6px;
+        height:30px;
+        background:#5b2072;
+        margin-right:2px
+    }
+
+    @keyframes face-load {
+        0%,100% {
+            transform: scaley(1);
+            opacity:1
+        }
+        50% {
+            transform: scaley(.4);
+        opacity:0.1
+        }
+    }
+
+    .face-load>div:nth-child(1) {
+        animation: face-load 1s -.4s infinite cubic-bezier(.2,.68,.18,1.08)
+    }
+
+    .face-load>div:nth-child(2) {
+        animation: face-load 1s -.3s infinite cubic-bezier(.2,.68,.18,1.08)
+    }
+
+    .face-load>div:nth-child(3) {
+        animation: face-load 1s -.2s infinite cubic-bezier(.2,.68,.18,1.08)
+    }
+
+    .face-load>div:nth-child(4) {
+        animation: face-load 1s -.1s infinite cubic-bezier(.2,.68,.18,1.08)
+    }
+
+    .face-load>div {
+        animation-fill-mode: both
+    }
+</style>
+<script>
+
+    var reqPageNo = 1;
+
+    window.onload = function(){
+
+        hideLoader();
+    
+        window.addEventListener('scroll', () => {
+            const {
+                scrollTop,
+                scrollHeight,
+                clientHeight
+            } = document.documentElement;
+
+            if (scrollTop + clientHeight >= scrollHeight - 5 ) {
+                showLoader();
+                reqPageNo++;
+                getList();
+            }
+        }, {
+            passive: true
+        });
+    }
+
+    $(function(){
+        /*
+        window.onscroll = function () {
+            if (getScrollTop() < getDocumentHeight() - window.innerHeight) return;
+            // 스크롤이 페이지 하단에 도달할 경우 새 페이지 로드
+            console.log("reqPageNo : " + reqPageNo);
+            reqPageNo++;
+            getList();
+	    };
+        */
+    })
+
+    function hideLoader() {
+        //$('.loader').removeClass('show');
+        $('.loader').fadeOut(1000);
+    }
+
+    function showLoader() {
+        //$('.loader').addClass('show');
+        $('.loader').fadeIn(1000);
+    }
+
+    function getDocumentHeight() {
+        const body = document.body;
+        const html = document.documentElement;
+        
+        return Math.max(
+            body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight
+        );
+    };
+
+    function getScrollTop() {
+        return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    }
+
+    function getList(){	
+        $.ajax({
+            url : 'getList.json',
+            type : 'GET',
+            dataType : 'json',
+            data : {
+                'reqPageNo' : reqPageNo,
+            },
+            success : function(data){
+                console.log(data.list);
+                var list = data.list;
+                var htmlcon="";		
+
+                list.forEach(function(data, idx){
+                    htmlcon += "<tr style='cursor:pointer;'>";
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key1 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key2 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key3 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key4 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key5 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key6 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key7 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key8 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key9 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key10 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "	<td>"
+                    htmlcon += "		<p>" + data.key11 + "</p>"
+                    htmlcon += "	</td>"
+                    htmlcon += "</tr>"
+                });
+
+                $('.list tbody').append(htmlcon);
+                hideLoader();		
+            },
+            error: function(err){ 
+                console.log(err);
+            }
+        });
+    }
+</script>
+<body>
+    <section>
+        <table class="list">
+            <caption>현황</caption>
+            <colgroup>
+                <col width="5%">
+                <col width="5%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>필드0</th>
+                    <th>필드1</th>
+                    <th>필드2</th>
+                    <th>필드3</th>
+                    <th>필드4</th>
+                    <th>필드5</th>
+                    <th>필드6</th>
+                    <th>필드7</th>
+                    <th>필드8</th>
+                    <th>필드9</th>
+                    <th>필드10</th>
+                </tr>
+            </thead>
+            <tbody>									
+                <tr style="cursor:pointer;">
+                    <td><p>1</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>2</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>3</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>4</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>5</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>6</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>7</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>8</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>9</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+                <tr style="cursor:pointer;">
+                    <td><p>10</p></td>
+                    <td><p>내용1</p></td>
+                    <td><p>내용2</p></td>
+                    <td><p>내용3</p></td>
+                    <td><p>내용4</p></td>
+                    <td><p>내용5</p></td>
+                    <td><p>내용6</p></td>
+                    <td><p>내용7</p></td>
+                    <td><p>내용8</p></td>
+                    <td><p>내용9</p></td>
+                    <td><p>내용10</p></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="face-load loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </section>
+</body>
+</html>
